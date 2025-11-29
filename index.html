@@ -48,36 +48,23 @@
 <body>
         <form class="container">
             <h1>Fleet Management Application</h1>
-            <label for="emailID" title="Email ID">Email ID:</label>
+            <label>Email ID:</label>
             <input type="email" id="emailID" name="emailID" required><br><br>
-            <label for="password" title="Password">Password:</label>
+            <label>Password:</label>
             <input type="password" id="password" name="password" required><br><br>
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <button id="loginBtn" type="submit">Login</button>
-            </div>
+            <button onclick="login()">Login</button>
         </form>
         <script>
-            const VALID_EMAIL = "admin@gmail.com";
-            const VALID_PASSWORD = "admin1234";
-
-            const form = document.getElementById('loginForm');
-            const emailInput = document.getElementById('emailID');
-            const passwordInput = document.getElementById('password');
-
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const email = emailInput.value.trim();
-                const password = passwordInput.value;
-
-                if (email === VALID_EMAIL && password === VALID_PASSWORD) {
-                    alert('Login successful!');
-                    localStorage.setItem('fleet_is _logged_in', 'true');
-                    location.href = 'admin.html';
-                    // Redirect to dashboard or another page
+            function login() {
+                let email = document.getElementById("emailID").value.trim();
+                let password = document.getElementById("password").value.trim();
+                if(email === "admin@gmail.com" && password === "admin1234") {
+                    localStorage.setItem("loggedIn", "yes");
+                    window.location.href = "admin.html";
                 } else {
-                    alert('Invalid email or password. Please try again.');
+                    alert("Invalid credentials");
                 }
-            });
+            }
         </script>
 </body>
 </html>

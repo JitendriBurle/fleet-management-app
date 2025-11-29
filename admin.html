@@ -59,6 +59,92 @@
                     alert("Please fill all fields");
                     return;
                 }
+                let obj = {
+                    id: Date.now(),
+                    regNo: reg,
+                    category: category,
+                    driver: drv,
+                    available: avail,
+                    image: Image
+                };
+                vehicles.push(obj);
+                render();
+                clearForm();
+            }
+
+            function clearForm() {
+                document.getElementById("reg").value = "";
+                document.getElementById("category").value = "";
+                document.getElementById("driver").value = "";
+                document.getElementById("avail").checked = true;
+            }
+
+            function render() {
+                let box = document.getElementById("cards");
+                box.innerHTML = "";
+
+                let filterCat = document.getElementById("filterCategory").value;
+                let filterAvail = document.getElementById("filterAvail").value;
+                let filtered = vehicles.filter(v => {
+                    if(filterCat !== "all" && v.category !== filterCat) return false;
+                    if(filterAvail !== "all") {
+                        if(filterAvail === "Available" && !v.available) return false;
+                        if(filterAvail === "Unavailable" && v.available) return false;
+                    }
+                    return true;
+                });
+
+                filtered.forEach(v => {
+                    let div = document.createElement("div");
+                    div.className = "card";
+                    div.innerHTML = `
+                        <img src="${v.image}" alt="Vehicle Image">
+                        <h3>Reg No: ${v.regNo}</h3>
+                        <p>Category: ${v.category}</p>
+                        <p>Driver: ${v.driver}</p>
+                        <p>Availability: ${v.available ? "Available" : "Unavailable"}</p>
+
+                        <div class="btnRow">
+                            <button class="updateBtn" onclick="updateDriver(${v.id})">Change Driver</button>
+                            <button class-"toggleBtn" onclick="toggleAvailability(${v.id})">Change Availability</button>
+                            <button class="deleteBtn" onclick="deleteFleet(${v.id})">Delete</button>
+                        </div>
+                    `;
+                    box.appendChild(div);
+                });
+            }
+
+            function updateDriver(id){
+                let v = vehicles.find(x => x.id === id);
+                let name = prompt("Enter new driver name:", v.driver);
+                if(name == null) return;
+                if(name.trim() === "") {
+                    alert("Driver name cannot be empty");
+                    return;
+                }
+                v.driver = name;
+                render();
+            }
+            function toggleAvailability(id) {
+                let v = vehicles.find(x => x.id === id);
+                v.available = !v.available;
+                render();
+            }
+
+            function deleteFleet(id) {
+                vehicles = vehicles.filter(x => x.id !== id);
+                render();
+            }
+
+            function clearFilters() {
+                document.getElementById("filterCategory").value = "all";
+                document.getElementById("filterAvail").value = "all";
+                render();
+            }
+
+            function logout() {
+                localStorage.removeItem("loggedIn");
+                window.location.href = "index.html";
             }
         </script>
     </div>
