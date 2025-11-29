@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <div class="navbar">
+        <label>Category:
+            <select id="filterCategory">
+                <option value="all">All</option>
+                <option>Auto</option>
+                <option>Car</option>
+                <option>Truck</option>
+                <option>Bus</option>
+            </select>
+        </label>
+        <label>Availability:
+            <select id="filterAvail">
+                <option value="all">All</option>
+                <option>Available</option>
+                <option>Unavailable</option>
+            </select>
+            <button onclick="clearFilters()">Clear</button>
+            <button onclick="logout()">Logout</button>
+        </label>
+    </div>
+    <div class="main">
+        <div class="sidebar">
+            <h3>Add Fleet</h3>
+            <label>Reg No</label>
+            <input id="reg">
+            <label>Category</label>
+            <select id="category">
+                <option value="">Select</option>
+                <option>Auto</option>
+                <option>Car</option>
+                <option>Truck</option>
+                <option>Bus</option>
+            </select>
+            <label><input id="avail" type="checkbox" checked>Available</label>
+            <button class="addBtn" onclick="addFleet()">Add Fleet</button>
+        </div>
+        <script>
+            if(localStorage.getItem("loggedIn") !== "yes") {
+                alert("Please login");
+                window.location.href="index.html";
+            }
+            let vehicles = [];
+            let Image = "https://coding-platform.s3.amazonaws.com/dev/lms/tickets/5e80fcb6-3f8e-480c-945b-30a5359eb40e/JNmYjkVr3WOjsrbu.png"
+
+            function addFleet() {
+                let reg = document.getElementById("reg").value.trim();
+                let category = document.getElementById("category").value;
+                let drv = document.getElementById("driver").value.trim();
+                let avail = document.getElementById("avail").checked;
+                if(!reg || !category || !drv){
+                    alert("Please fill all fields");
+                    return;
+                }
+            }
+        </script>
+    </div>
+</body>
+</html>
