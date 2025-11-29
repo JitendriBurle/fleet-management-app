@@ -4,79 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Arial;
             padding: 20px;
-            background-color: #f4f4f4;
+            background: #f2f2f2;
         }
+
         .navbar {
-            background-color: white;
+            background: white;
             padding: 10px;
             border: 1px solid #ccc;
             margin-bottom: 20px;
         }
-        select, button {
-            padding: 5px;
-            margin-right: 10px;
-        }
+
         .main {
             display: flex;
             gap: 20px;
         }
+
         .sidebar {
             width: 250px;
-            padding: 15px;
             background: white;
+            padding: 15px;
             border: 1px solid #ccc;
         }
-        .sidebar input, .sidebar select {
+
+        .sidebar input,
+        .sidebar select {
             width: 100%;
-            padding: 6px;
-            margin-top: 5px;
-            margin-bottom: 10px;
+            padding: 7px;
+            margin-top: 6px;
             border: 1px solid #aaa;
         }
+
         .addBtn {
-            width: 100%;
+            margin-top: 10px;
             padding: 10px;
-            background-color: rgb(65, 65, 255);
+            width: 100%;
+            background: #4169e1;
             color: white;
             border: none;
-            cursor: pointer;
-            margin-top: 10px;
         }
+
         .card {
-            background-color: white;
+            background: white;
             padding: 10px;
             border: 1px solid #ccc;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
+
         .card img {
             width: 100%;
             height: 120px;
             object-fit: cover;
-            border: 1px solid #ddd;
             margin-bottom: 10px;
         }
+
         .btnRow button {
             padding: 6px;
-            margin-right: 5px;
             border: none;
+            margin-right: 5px;
             cursor: pointer;
         }
-        .updateBtn, .toggleBtn {
-            background-color: rgb(65, 200, 65);
-            color: white;
-        }
-        .deleteBtn {
-            background-color: rgb(255, 65, 65);
-            color: white;
-            border: none;
-        }
+
+        .updateBtn { background: #28a745; color: white; }
+        .toggleBtn { background: #17a2b8; color: white; }
+        .deleteBtn { background: #dc3545; color: white; }
     </style>
 </head>
 <body>
+
+    <script>
+        if (localStorage.getItem("loggedIn") !== "yes") {
+            window.location.href = "index.html";
+        }
+    </script>
+
     <div class="navbar">
         <label>Category:
             <select id="filterCategory">
@@ -87,21 +92,28 @@
                 <option>Bus</option>
             </select>
         </label>
+
         <label>Availability:
             <select id="filterAvail">
                 <option value="all">All</option>
                 <option>Available</option>
                 <option>Unavailable</option>
             </select>
-            <button onclick="clearFilters()">Clear</button>
-            <button onclick="logout()">Logout</button>
         </label>
+
+        <button onclick="clearFilters()">Clear</button>
+        <button onclick="logout()">Logout</button>
     </div>
+
     <div class="main">
+
+        <!-- Sidebar -->
         <div class="sidebar">
             <h3>Add Fleet</h3>
+
             <label>Reg No</label>
             <input id="reg">
+
             <label>Category</label>
             <select id="category">
                 <option value="">Select</option>
@@ -110,110 +122,128 @@
                 <option>Truck</option>
                 <option>Bus</option>
             </select>
-            <label><input id="avail" type="checkbox" checked>Available</label>
+
+            <label>Driver Name</label>
+            <input id="driver">
+
+            <label>
+                <input type="checkbox" id="avail" checked>
+                Available
+            </label>
+
             <button class="addBtn" onclick="addFleet()">Add Fleet</button>
         </div>
-        <script>
-            let vehicles = [];
-            let Image = "https://coding-platform.s3.amazonaws.com/dev/lms/tickets/5e80fcb6-3f8e-480c-945b-30a5359eb40e/JNmYjkVr3WOjsrbu.png"
 
-            function addFleet() {
-                let reg = document.getElementById("reg").value.trim();
-                let category = document.getElementById("category").value;
-                let drv = document.getElementById("driver").value.trim();
-                let avail = document.getElementById("avail").checked;
-                if(!reg || !category || !drv){
-                    alert("Please fill all fields");
-                    return;
-                }
-                let obj = {
-                    id: Date.now(),
-                    regNo: reg,
-                    category: category,
-                    driver: drv,
-                    available: avail,
-                    image: Image
-                };
-                vehicles.push(obj);
-                render();
-                clearForm();
-            }
+        <div id="cards" style="flex:1;"></div>
 
-            function clearForm() {
-                document.getElementById("reg").value = "";
-                document.getElementById("category").value = "";
-                document.getElementById("driver").value = "";
-                document.getElementById("avail").checked = true;
-            }
-
-            function render() {
-                let box = document.getElementById("cards");
-                box.innerHTML = "";
-
-                let filterCat = document.getElementById("filterCategory").value;
-                let filterAvail = document.getElementById("filterAvail").value;
-                let filtered = vehicles.filter(v => {
-                    if(filterCat !== "all" && v.category !== filterCat) return false;
-                    if(filterAvail !== "all") {
-                        if(filterAvail === "Available" && !v.available) return false;
-                        if(filterAvail === "Unavailable" && v.available) return false;
-                    }
-                    return true;
-                });
-
-                filtered.forEach(v => {
-                    let div = document.createElement("div");
-                    div.className = "card";
-                    div.innerHTML = `
-                        <img src="${v.image}" alt="Vehicle Image">
-                        <h3>Reg No: ${v.regNo}</h3>
-                        <p>Category: ${v.category}</p>
-                        <p>Driver: ${v.driver}</p>
-                        <p>Availability: ${v.available ? "Available" : "Unavailable"}</p>
-
-                        <div class="btnRow">
-                            <button class="updateBtn" onclick="updateDriver(${v.id})">Change Driver</button>
-                            <button class-"toggleBtn" onclick="toggleAvailability(${v.id})">Change Availability</button>
-                            <button class="deleteBtn" onclick="deleteFleet(${v.id})">Delete</button>
-                        </div>
-                    `;
-                    box.appendChild(div);
-                });
-            }
-
-            function updateDriver(id){
-                let v = vehicles.find(x => x.id === id);
-                let name = prompt("Enter new driver name:", v.driver);
-                if(name == null) return;
-                if(name.trim() === "") {
-                    alert("Driver name cannot be empty");
-                    return;
-                }
-                v.driver = name;
-                render();
-            }
-            function toggleAvailability(id) {
-                let v = vehicles.find(x => x.id === id);
-                v.available = !v.available;
-                render();
-            }
-
-            function deleteFleet(id) {
-                vehicles = vehicles.filter(x => x.id !== id);
-                render();
-            }
-
-            function clearFilters() {
-                document.getElementById("filterCategory").value = "all";
-                document.getElementById("filterAvail").value = "all";
-                render();
-            }
-
-            function logout() {
-                localStorage.removeItem("loggedIn");
-                window.location.href = "index.html";
-            }
-        </script>
     </div>
+
+    <script>
+        let vehicles = [];
+        const imageURL = "https://coding-platform.s3.amazonaws.com/dev/lms/tickets/5e80fcb6-3f8e-480c-945b-30a5359eb40e/JNmYjkVr3WOjsrbu.png";
+
+        function addFleet() {
+            let r = document.getElementById("reg").value.trim();
+            let c = document.getElementById("category").value;
+            let d = document.getElementById("driver").value.trim();
+            let a = document.getElementById("avail").checked;
+
+            if (!r || !c || !d) {
+                alert("Please fill all fields");
+                return;
+            }
+
+            vehicles.push({
+                id: Date.now(),
+                regNo: r,
+                category: c,
+                driver: d,
+                available: a,
+                image: imageURL
+            });
+
+            render();
+            clearForm();
+        }
+
+        function clearForm() {
+            document.getElementById("reg").value = "";
+            document.getElementById("category").value = "";
+            document.getElementById("driver").value = "";
+            document.getElementById("avail").checked = true;
+        }
+
+        function render() {
+            let box = document.getElementById("cards");
+            box.innerHTML = "";
+
+            let fc = document.getElementById("filterCategory").value;
+            let fa = document.getElementById("filterAvail").value;
+
+            let filtered = vehicles.filter(v => {
+                if (fc !== "all" && v.category !== fc) return false;
+                if (fa !== "all") {
+                    if (fa === "Available" && !v.available) return false;
+                    if (fa === "Unavailable" && v.available) return false;
+                }
+                return true;
+            });
+
+            filtered.forEach(v => {
+                let card = document.createElement("div");
+                card.className = "card";
+
+                card.innerHTML = `
+                    <img src="${v.image}">
+                    <h3>${v.regNo}</h3>
+                    <p>Category: ${v.category}</p>
+                    <p>Driver: ${v.driver}</p>
+                    <p>Status: ${v.available ? "Available" : "Unavailable"}</p>
+
+                    <div class="btnRow">
+                        <button class="updateBtn" onclick="changeDriver(${v.id})">Change Driver</button>
+                        <button class="toggleBtn" onclick="toggleAvailability(${v.id})">Change Availability</button>
+                        <button class="deleteBtn" onclick="deleteFleet(${v.id})">Delete</button>
+                    </div>
+                `;
+
+                box.appendChild(card);
+            });
+        }
+
+        function changeDriver(id) {
+            let v = vehicles.find(x => x.id === id);
+            let name = prompt("New driver name:", v.driver);
+
+            if (name === null) return;
+            if (name.trim() === "") return alert("Driver name cannot be empty");
+
+            v.driver = name;
+            render();
+        }
+
+        function toggleAvailability(id) {
+            let v = vehicles.find(x => x.id === id);
+            v.available = !v.available;
+            render();
+        }
+
+        function deleteFleet(id) {
+            vehicles = vehicles.filter(x => x.id !== id);
+            render();
+        }
+
+        function clearFilters() {
+            document.getElementById("filterCategory").value = "all";
+            document.getElementById("filterAvail").value = "all";
+            render();
+        }
+
+        function logout() {
+            localStorage.removeItem("loggedIn");
+            window.location.href = "index.html";
+        }
+    </script>
+
 </body>
 </html>
