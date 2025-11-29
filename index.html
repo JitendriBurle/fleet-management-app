@@ -5,42 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fleet Management App</title>
     <style>
-        :root {
-            --bg: #f7f8fb;
-            --card: #fff;
-            --accent: #2b6cbo;
-            --muted: #6b7280;
-        }
-        *{
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
         body {
-            margin: 0;
-            min-height: 100vh;
-            background: linear-gradient(rgb(237, 240, 247), rgb(242, 243, 247));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: white;
         }
-        .wrap{
-            width: 100%;
-            max-width: 420px;
-            background: var(--card);
-            padding: 28px;
+        .container {
+            width: 300px;
+            margin: auto;
+            background: rgb(251, 252, 252);
+            padding: 20px;
+            border: 1px solid #ccc;
             border-radius: 10px;
-            box-shadow: 0 6px 18px rgba(20, 20, 40, 0.08);
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #aaa;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            background-color: rgb(65, 65, 255);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: rgb(45, 45, 200);
         }
     </style>
 </head>
 <body>
-    <h1>Fleet Management Application</h1>
-        <form id="loginForm" onsubmit="return false;">
+        <form class="container">
+            <h1>Fleet Management Application</h1>
             <label for="emailID" title="Email ID">Email ID:</label>
-            <input type="email" id="emailID" name="emailID" placeholder="admin@gmail.com" required><br><br>
+            <input type="email" id="emailID" name="emailID" required><br><br>
             <label for="password" title="Password">Password:</label>
-            <input type="password" id="password" name="password" placeholder="admin1234" required><br><br>
+            <input type="password" id="password" name="password" required><br><br>
             <div style="display: flex; gap: 12px; align-items: center;">
                 <button id="loginBtn" type="submit">Login</button>
             </div>
