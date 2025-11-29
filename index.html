@@ -6,13 +6,38 @@
     <title>Fleet Management App</title>
 </head>
 <body>
-    <titile>Fleet Management Application</title>
-        <form>
+    <h1>Fleet Management Application</h1>
+        <form id="loginForm" onsubmit="return false;">
             <label for="emailID" title="Email ID">Email ID:</label>
-            <input type="email" id="emailID" name="emailID" required><br><br>
+            <input type="email" id="emailID" name="emailID" placeholder="admin@gmail.com" required><br><br>
             <label for="password" title="Password">Password:</label>
-            <input type="password" id="password" name="password" required><br><br>
-            <input type="submit" value="Login">
+            <input type="password" id="password" name="password" placeholder="admin1234" required><br><br>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <button id="loginBtn" type="submit">Login</button>
+            </div>
         </form>
+        <script>
+            const VALID_EMAIL = "admin@gmail.com";
+            const VALID_PASSWORD = "admin1234";
+
+            const form = document.getElementById('loginForm');
+            const emailInput = document.getElementById('emailID');
+            const passwordInput = document.getElementById('password');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = emailInput.value.trim();
+                const password = passwordInput.value;
+
+                if (email === VALID_EMAIL && password === VALID_PASSWORD) {
+                    alert('Login successful!');
+                    localStorage.setItem('fleet_is _logged_in', 'true');
+                    location.href = 'admin.html';
+                    // Redirect to dashboard or another page
+                } else {
+                    alert('Invalid email or password. Please try again.');
+                }
+            });
+        </script>
 </body>
 </html>
